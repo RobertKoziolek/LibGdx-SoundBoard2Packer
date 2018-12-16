@@ -1,0 +1,59 @@
+buildscript {
+
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+    dependencies {
+
+
+    }
+}
+plugins {
+    id "java"
+    id "net.ltgt.apt" version "0.10"
+}
+allprojects {
+
+    version = '1.0'
+    ext {
+        appName = "LibGDX-SoundBoard2Packer"
+        gdxVersion = '1.9.9'
+        ashleyVersion = '1.7.0'
+        visuiVersion = '1.4.2'
+
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+project(":desktop") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    }
+}
+
+project(":core") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.kotcrab.vis:vis-ui:$visuiVersion"
+        compileOnly "org.projectlombok:lombok:1.18.4"
+        compile 'com.google.dagger:dagger:2.19'
+    }
+}
