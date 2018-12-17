@@ -30,7 +30,6 @@ public class ChooserModule {
         return fileChooser;
     }
 
-
     @Provides
     @Singleton
     public FileChooserListener provideListener(final SoundHolder soundHolder) {
