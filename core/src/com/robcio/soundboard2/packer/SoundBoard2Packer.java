@@ -5,11 +5,12 @@ import com.kotcrab.vis.ui.VisUI;
 
 
 public class SoundBoard2Packer extends Game {
+    private PackerComponent packerComponent;
 
     @Override
     public void create() {
         VisUI.load();
-        final PackerComponent packerComponent = DaggerPackerComponent.create();
+        packerComponent = DaggerPackerComponent.create();
 
         setScreen(packerComponent.mainScreen());
     }
@@ -17,6 +18,8 @@ public class SoundBoard2Packer extends Game {
     @Override
     public void dispose() {
         super.dispose();
+        packerComponent.soundCreator()
+                       .dispose();
         getScreen().dispose();
         VisUI.dispose();
     }

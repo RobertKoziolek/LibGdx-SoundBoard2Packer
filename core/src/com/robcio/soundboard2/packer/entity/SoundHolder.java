@@ -3,23 +3,18 @@ package com.robcio.soundboard2.packer.entity;
 import com.badlogic.gdx.files.FileHandle;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
-@Singleton
 public class SoundHolder {
 
-    private Set<FileHandle> set;
+    private ArrayList<FileHandle> fileHandles;
 
     @Inject
     public SoundHolder() {
-        this.set = new LinkedHashSet<>();
+        this.fileHandles = new ArrayList<>();
     }
 
-    public void add(final FileHandle fileHandle) {
-        System.out.println("adding " + fileHandle.file()
-                                                 .getName());
-        this.set.add(fileHandle);
+    public ArrayList<FileHandle> getFileHandles() {
+        return fileHandles;
     }
 }

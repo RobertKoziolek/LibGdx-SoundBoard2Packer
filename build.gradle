@@ -25,7 +25,6 @@ allprojects {
         appName = "LibGDX-SoundBoard2Packer"
         gdxVersion = '1.9.9'
         visuiVersion = '1.4.2'
-        lombokVersion = '1.18.4'
         daggerVersion = '2.0.2'
 
     }
@@ -57,8 +56,6 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.kotcrab.vis:vis-ui:$visuiVersion"
-
-        compileOnly "org.projectlombok:lombok:$lombokVersion"
 
         compile "com.google.dagger:dagger:$daggerVersion"
         apt "com.google.dagger:dagger-compiler:$daggerVersion"
