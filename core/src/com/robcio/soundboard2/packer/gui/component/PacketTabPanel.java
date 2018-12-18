@@ -12,10 +12,10 @@ import javax.inject.Singleton;
 import static com.robcio.soundboard2.packer.util.Constants.TAB_PANEL_HEIGHT;
 
 @Singleton
-public class PackerTabbedPane extends TabbedPane {
+public class PacketTabPanel extends TabbedPane {
 
     @Inject
-    public PackerTabbedPane() {
+    public PacketTabPanel() {
         super();
     }
 

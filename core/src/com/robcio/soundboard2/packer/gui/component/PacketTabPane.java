@@ -8,6 +8,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
 import com.robcio.soundboard2.packer.util.Command;
 import com.robcio.soundboard2.packer.util.SoundCreator;
@@ -37,7 +38,9 @@ public class PacketTabPane extends VisSplitPane {
         soundContent.add("This is sound content");
     }
 
-    public void updateSoundContent(final SoundInfo soundInfo, final Command updateViewCommand) {
+    public void updateSoundContent(final SoundInfo soundInfo,
+                                   final Command updateViewCommand,
+                                   final Command setDirtyCommand) {
         soundContent.clear();
         final Sound sound = soundCreator.create(soundInfo.getFileHandle());
         final VisTextButton playButton = new VisTextButton("Play", new ChangeListener() {
@@ -55,6 +58,7 @@ public class PacketTabPane extends VisSplitPane {
                     .row();
 
         final VisValidatableTextField nameField = new VisValidatableTextField(new NameValidator());
+        nameField.setText(soundInfo.getName());
         soundContent.add(nameField)
                     .row();
         final VisTextButton nameChangeButton = new VisTextButton("Change", new ChangeListener() {
@@ -64,6 +68,7 @@ public class PacketTabPane extends VisSplitPane {
                     soundInfo.setName(nameField.getText());
                 }
                 updateViewCommand.perform();
+                setDirtyCommand.perform();
             }
         });
         soundContent.add(nameChangeButton)
@@ -76,5 +81,37 @@ public class PacketTabPane extends VisSplitPane {
         soundContent.clear();
         soundContent.add(fileChooser)
                     .grow();
+    }
+
+    public void updatePacketContent(final PacketInfo packetInfo,
+                                    final Command saveCommand,
+                                    final Command changeTitleCommand) {
+        packetContent.clear();
+        final VisValidatableTextField nameField = new VisValidatableTextField(new NameValidator());
+        nameField.setText(packetInfo.getName());
+        packetContent.add(nameField)
+                     .row();
+        final VisTextButton nameChangeButton = new VisTextButton("Change", new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                if (nameField.isInputValid()) {
+                    packetInfo.setName(nameField.getText());
+                    changeTitleCommand.perform();
+                }
+            }
+        });
+        final VisTextButton saveButton = new VisTextButton("Save packet", new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                saveCommand.perform();
+            }
+        });
+        packetContent.add(nameChangeButton)
+                     .row();
+        packetContent.add(saveButton)
+                     .row();
+    }
+
+    public void updatePacketContent(PacketInfo packetInfo, Object o, Object o1) {
     }
 }

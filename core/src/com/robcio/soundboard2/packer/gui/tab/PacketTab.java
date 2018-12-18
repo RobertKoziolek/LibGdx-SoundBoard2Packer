@@ -35,21 +35,24 @@ public class PacketTab extends Tab {
         this.packetTabPane = packetTabPane;
         final ListView<SoundInfo> listView = new ListView<>(soundInfoAdapter);
         initializeLayout(packetTabPane, listView);
+        packetTabPane.updatePacketContent(packetInfo, this::save, this::updateTitle);
         packetTabPane.openFiles(fileChooser);
         {
-            listView.setItemClickListener(soundInfo -> {
-                packetTabPane.updateSoundContent(soundInfo, soundInfoAdapter::itemsDataChanged);
-            });
-            final VisTextButton fileButton = new VisTextButton("Clear & open mp3 files", new ChangeListener() {
+            listView.setItemClickListener(
+                    soundInfo -> packetTabPane.updateSoundContent(soundInfo,
+                                                                  soundInfoAdapter::itemsDataChanged,
+                                                                  () -> setDirty(true)));
+            final VisTextButton fileButton = new VisTextButton("Clear & load mp3 folder", new ChangeListener() {
+
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
+                    soundInfoAdapter.deselect();
                     packetTabPane.openFiles(fileChooser);
                 }
             });
             listView.setHeader(fileButton);
             listView.getScrollPane()
                     .setScrollingDisabled(true, false);
-            //TODO /\ adding new things scrolls it to the right
         }
         {
             fileChooser.setListener(new FileChooserAdapter() {
@@ -63,6 +66,10 @@ public class PacketTab extends Tab {
         }
     }
 
+    private void updateTitle() {
+        getPane().updateTabTitle(this);
+    }
+
     private void initializeLayout(final PacketTabPane packetTabPane, final ListView<SoundInfo> listView) {
         content.left();
         content.add(listView.getMainTable())
@@ -70,6 +77,14 @@ public class PacketTab extends Tab {
                .width(LIST_VIEW_WIDTH);
         content.add(packetTabPane)
                .grow();
+    }
+
+    @Override
+    public boolean save() {
+        super.save();
+        setDirty(false);
+        //TODO saving
+        return true;
     }
 
     @Override

@@ -36,9 +36,18 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
 
     public void setFiles(final Array<FileHandle> files) {
         clear();
-        Arrays.stream(files.toArray())
+        Arrays.stream(files.get(0)
+                           .list())
               .map(SoundInfo::new)
               .forEach(this::add);
+    }
+
+    @Override
+    public void itemsDataChanged() {
+        final ListSelection<SoundInfo, VisTable> selection = getSelectionManager();
+        super.itemsDataChanged();
+        selection.select(selection.getSelection()
+                                  .get(0));
     }
 
     @Override
@@ -53,5 +62,9 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
         final VisLabel label = (VisLabel) view.getChildren()
                                               .get(0);
         label.setColor(Color.WHITE);
+    }
+
+    public void deselect() {
+        getSelectionManager().deselectAll();
     }
 }

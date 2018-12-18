@@ -8,7 +8,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.PackerComponent;
-import com.robcio.soundboard2.packer.gui.component.PackerTabbedPane;
+import com.robcio.soundboard2.packer.gui.component.PacketTabPanel;
 
 import javax.inject.Inject;
 
@@ -16,7 +16,7 @@ public class MainTab extends Tab {
     private final VisTable content = new VisTable();
 
     @Inject
-    public MainTab(final PackerComponent packerComponent, final PackerTabbedPane tabbedPane) {
+    public MainTab(final PackerComponent packerComponent, final PacketTabPanel tabbedPane) {
         super(false, false);
         content.add(new VisLabel("This is the main tab"));
         {
