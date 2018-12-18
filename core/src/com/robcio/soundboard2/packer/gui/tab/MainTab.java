@@ -23,7 +23,7 @@ public class MainTab extends Tab {
             final VisTextButton packageButton = new VisTextButton("Add package", new ChangeListener() {
                 @Override
                 public void changed(final ChangeEvent event, final Actor actor) {
-                    tabbedPane.add(packerComponent.packageTab());
+                    tabbedPane.add(packerComponent.packetTab());
                 }
             });
             content.add(packageButton);

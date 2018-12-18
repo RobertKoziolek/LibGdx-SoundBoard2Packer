@@ -20,8 +20,7 @@ public class MainStage extends Stage {
     public MainStage(final PackerTabbedPane tabbedPane, final MainTab mainTab) {
         super(new StretchViewport(APP_WIDTH, APP_HEIGHT));
         final Table root = initializeRoot();
-        final Table container = new VisTable();
-        tabbedPane.initialize(root, container);
+        tabbedPane.initialize(root);
         tabbedPane.add(mainTab);
     }
 

@@ -26,6 +26,7 @@ public class SoundCreator {
     }
 
     public void dispose() {
+        System.out.println(sounds.size());
         sounds.forEach(Sound::dispose);
     }
 }

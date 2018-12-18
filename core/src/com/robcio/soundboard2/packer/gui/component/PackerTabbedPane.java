@@ -1,6 +1,7 @@
 package com.robcio.soundboard2.packer.gui.component;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
@@ -18,7 +19,8 @@ public class PackerTabbedPane extends TabbedPane {
         super();
     }
 
-    public void initialize(final Table root, final Table container) {
+    public void initialize(final Table root) {
+        final VisTable container = new VisTable();
         root.add(getTable())
             .expandX()
             .height(TAB_PANEL_HEIGHT)
