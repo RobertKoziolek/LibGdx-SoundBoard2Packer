@@ -14,9 +14,12 @@ import java.util.Arrays;
 
 public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
 
+    private final SoundInfoHolder soundInfoHolder;
+
     @Inject
     public SoundInfoAdapter(final SoundInfoHolder soundInfoHolder) {
         super(soundInfoHolder.getSoundInfos());
+        this.soundInfoHolder = soundInfoHolder;
         setSelectionMode(SelectionMode.SINGLE);
     }
 
@@ -34,12 +37,15 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
         view.add(new VisLabel(item.getName()));
     }
 
-    public void setFiles(final Array<FileHandle> files) {
+    public String readDirectory(final Array<FileHandle> files) {
+        //TODO loading needs to check for mp3 only
         clear();
-        Arrays.stream(files.get(0)
-                           .list())
+        final FileHandle fileHandle = files.get(0);
+        Arrays.stream(fileHandle
+                              .list())
               .map(SoundInfo::new)
               .forEach(this::add);
+        return fileHandle.name();
     }
 
     @Override
@@ -66,5 +72,9 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
 
     public void deselect() {
         getSelectionManager().deselectAll();
+    }
+
+    public SoundInfoHolder getSoundInfoHolder() {
+        return soundInfoHolder;
     }
 }

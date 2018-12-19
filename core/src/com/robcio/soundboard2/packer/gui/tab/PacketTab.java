@@ -13,6 +13,7 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
+import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
 import com.robcio.soundboard2.packer.gui.component.SoundInfoAdapter;
 
@@ -23,6 +24,7 @@ import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 public class PacketTab extends Tab {
     private final VisTable content = new VisTable();
     private final PacketInfo packetInfo;
+    private final SoundInfoHolder soundInfoHolder;
     private final PacketTabPane packetTabPane;
 
     @Inject
@@ -32,10 +34,11 @@ public class PacketTab extends Tab {
                      final PacketTabPane packetTabPane) {
         super(true, true);
         this.packetInfo = packetInfo;
+        this.soundInfoHolder = soundInfoAdapter.getSoundInfoHolder();
         this.packetTabPane = packetTabPane;
         final ListView<SoundInfo> listView = new ListView<>(soundInfoAdapter);
         initializeLayout(packetTabPane, listView);
-        packetTabPane.updatePacketContent(packetInfo, this::save, this::updateTitle);
+        updatePacketContent();
         packetTabPane.openFiles(fileChooser);
         {
             listView.setItemClickListener(
@@ -58,15 +61,21 @@ public class PacketTab extends Tab {
             fileChooser.setListener(new FileChooserAdapter() {
                 @Override
                 public void selected(final Array<FileHandle> files) {
-                    soundInfoAdapter.setFiles(files);
-                    //TODO perhaps this code should not be here
+                    final String dirName = soundInfoAdapter.readDirectory(files);
+                    updateTitle(dirName);
                     setDirty(true);
+                    updatePacketContent();
                 }
             });
         }
     }
 
-    private void updateTitle() {
+    private void updatePacketContent() {
+        packetTabPane.updatePacketContent(packetInfo, soundInfoHolder, this::save, this::updateTitle);
+    }
+
+    private void updateTitle(final String title) {
+        packetInfo.setName(title);
         getPane().updateTabTitle(this);
     }
 

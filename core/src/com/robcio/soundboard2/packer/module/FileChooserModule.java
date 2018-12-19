@@ -15,9 +15,9 @@ public class FileChooserModule {
     @Provides
     public FileChooser provideFileChooser() {
         final FileChooser fileChooser = new FileChooser(FileChooser.Mode.OPEN);
-        fileChooser.setMultiSelectionEnabled(false);
         fileChooser.setSelectionMode(FileChooser.SelectionMode.DIRECTORIES);
         fileChooser.setKeepWithinParent(true);
+        fileChooser.setMultiSelectionEnabled(false);
         fileChooser.setResizable(false);
         fileChooser.setModal(false);
         return fileChooser;
