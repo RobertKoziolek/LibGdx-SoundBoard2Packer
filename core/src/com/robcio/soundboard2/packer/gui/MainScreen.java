@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.robcio.soundboard2.packer.util.KeyboardFocuser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -11,10 +12,12 @@ import javax.inject.Singleton;
 @Singleton
 public class MainScreen extends ScreenAdapter {
 
+    private final KeyboardFocuser keyboardFocuser;
     private final Stage stage;
 
     @Inject
-    public MainScreen(final MainStage stage) {
+    public MainScreen(final KeyboardFocuser keyboardFocuser, final MainStage stage) {
+        this.keyboardFocuser = keyboardFocuser;
         this.stage = stage;
         Gdx.input.setInputProcessor(stage);
     }
@@ -35,6 +38,7 @@ public class MainScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        keyboardFocuser.setStage(stage);
     }
 
     @Override

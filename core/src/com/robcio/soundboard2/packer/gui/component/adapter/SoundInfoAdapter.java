@@ -1,4 +1,4 @@
-package com.robcio.soundboard2.packer.gui.component;
+package com.robcio.soundboard2.packer.gui.component.adapter;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -32,13 +32,13 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
     }
 
     @Override
-    protected void updateView(final VisTable view, final SoundInfo item) {
-        view.clear();
-        view.add(new VisLabel(item.getName()));
+    protected void updateView(final VisTable table, final SoundInfo soundInfo) {
+        table.clear();
+        table.add(new VisLabel(soundInfo.getName()));
     }
 
     public String readDirectory(final Array<FileHandle> files) {
-        //TODO loading needs to check for mp3 only
+        //TODO loading needs to check for mp3 only / maybe .ogg too if decided on using more than mp3
         clear();
         final FileHandle fileHandle = files.get(0);
         Arrays.stream(fileHandle

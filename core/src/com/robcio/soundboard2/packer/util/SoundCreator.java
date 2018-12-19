@@ -6,27 +6,31 @@ import com.badlogic.gdx.files.FileHandle;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Singleton
 public class SoundCreator {
 
-    private List<Sound> sounds;
+    private Map<FileHandle, Sound> sounds;
 
     @Inject
     public SoundCreator() {
-        sounds = new ArrayList<>();
+        sounds = new HashMap<>();
     }
 
     public Sound create(final FileHandle fileHandle) {
+        if (sounds.containsKey(fileHandle)) {
+            return sounds.get(fileHandle);
+        }
         final Sound sound = Gdx.audio.newSound(fileHandle);
-        sounds.add(sound);
+        sounds.put(fileHandle, sound);
         return sound;
     }
 
     public void dispose() {
         System.out.println(sounds.size());
-        sounds.forEach(Sound::dispose);
+        sounds.values()
+              .forEach(Sound::dispose);
     }
 }

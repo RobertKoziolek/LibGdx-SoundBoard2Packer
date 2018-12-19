@@ -20,7 +20,6 @@ public class MainStage extends Stage {
     public MainStage(final PacketTabPanel tabbedPane, final MainTab mainTab) {
         super(new StretchViewport(APP_WIDTH, APP_HEIGHT));
         final Table root = initializeRoot();
-        //TODO the root can be injected perhaps, to cut down on 'initializeRoot' call
         tabbedPane.initialize(root);
         tabbedPane.add(mainTab);
     }

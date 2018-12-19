@@ -15,7 +15,7 @@ import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
-import com.robcio.soundboard2.packer.gui.component.SoundInfoAdapter;
+import com.robcio.soundboard2.packer.gui.component.adapter.SoundInfoAdapter;
 
 import javax.inject.Inject;
 
@@ -87,6 +87,12 @@ public class PacketTab extends Tab {
         content.add(packetTabPane)
                .grow();
     }
+
+//    @Override
+//    public void onShow() {
+//        super.onShow();
+//        //TODO update sound content if filters changed or sth
+//    }
 
     @Override
     public boolean save() {

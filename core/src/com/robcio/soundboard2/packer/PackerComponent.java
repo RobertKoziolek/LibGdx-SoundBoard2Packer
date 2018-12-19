@@ -1,6 +1,7 @@
 package com.robcio.soundboard2.packer;
 
 import com.robcio.soundboard2.packer.gui.MainScreen;
+import com.robcio.soundboard2.packer.gui.MainStage;
 import com.robcio.soundboard2.packer.gui.tab.PacketTab;
 import com.robcio.soundboard2.packer.module.FileChooserModule;
 import com.robcio.soundboard2.packer.util.SoundCreator;
@@ -16,4 +17,6 @@ public interface PackerComponent {
     PacketTab packetTab();
 
     SoundCreator soundCreator();
+
+    MainStage mainStage();
 }
