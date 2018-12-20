@@ -10,11 +10,14 @@ public class SoundInfo {
     private final FileHandle fileHandle;
     private String name;
     private final ArrayList<FilterInfo> filters;
+    //TODO suites
+    private final ArrayList<String> suites;
 
     public SoundInfo(final FileHandle fileHandle) {
         this.fileHandle = fileHandle;
         this.name = fileHandle.name();
         this.filters = new ArrayList<>();
+        this.suites = new ArrayList<>();
     }
 
     public String getName() {
@@ -31,5 +34,9 @@ public class SoundInfo {
 
     public ArrayList<FilterInfo> getFilters() {
         return filters;
+    }
+
+    public ArrayList<String> getSuites() {
+        return suites;
     }
 }

@@ -1,6 +1,8 @@
 package com.robcio.soundboard2.packer.file;
 
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
+import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 
@@ -8,14 +10,17 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 //TODO All packets info and indicator info, all zipped with sounds and images
 @Singleton
-public class JsonWriter {
+public class PacketJsonWriter {
 
     @Inject
-    public JsonWriter() {
+    public PacketJsonWriter() {
 
     }
 
@@ -38,23 +43,35 @@ public class JsonWriter {
                            json.writeValue("file", soundInfo.getFileHandle()
                                                             .name()
                                                             .replace(".mp3", ""));
-                           json.writeArrayStart("filters");
-                           soundInfo.getFilters()
-                                    .forEach(filterInfo -> {
-                                        try {
-                                            json.getWriter()
-                                                .value(filterInfo.getName());
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    });
-                           json.writeArrayEnd();
-                           //TODO writing suites to json
+                           writeArray(json, "filters", packetInfo.getName(), soundInfo.getFilters()
+                                                                                      .stream()
+                                                                                      .map(FilterInfo::getName)
+                                                                                      .collect(Collectors.toList()));
+                           writeArray(json, "suites", null, soundInfo.getSuites());
                            json.writeObjectEnd();
                        });
         json.writeArrayEnd();
         json.writeObjectEnd();
 
         System.out.println(json.prettyPrint(stringWriter.toString()));
+    }
+
+    private void writeArray(final Json json, final String name, final String first, final List<String> values) {
+        json.writeArrayStart(name);
+        final JsonWriter writer = json.getWriter();
+        if (!Objects.isNull(first)) {
+            writeValue(writer, first);
+        }
+        values.forEach(value -> writeValue(writer, value));
+        json.writeArrayEnd();
+    }
+
+    private void writeValue(final JsonWriter writer, final String value) {
+        try {
+            writer.value(value);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

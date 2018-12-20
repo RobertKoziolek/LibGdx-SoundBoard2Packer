@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.adapter.ArrayListAdapter;
+import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
@@ -52,8 +53,10 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
     public void itemsDataChanged() {
         final ListSelection<SoundInfo, VisTable> selection = getSelectionManager();
         super.itemsDataChanged();
-        selection.select(selection.getSelection()
-                                  .get(0));
+        if (size() > 0) {
+            selection.select(selection.getSelection()
+                                      .get(0));
+        }
     }
 
     @Override
@@ -76,5 +79,21 @@ public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
 
     public SoundInfoHolder getSoundInfoHolder() {
         return soundInfoHolder;
+    }
+
+    public void selectFirst(final ListView.ItemClickListener<SoundInfo> clickListener) {
+        if (size() > 0) {
+            final SoundInfo soundInfo = get(0);
+            getSelectionManager().select(soundInfo);
+            clickListener.clicked(soundInfo);
+        }
+    }
+
+    public void reselect(final ListView.ItemClickListener<SoundInfo> clickListener) {
+        if (size() > 0) {
+            final SoundInfo soundInfo = get(0);
+            getSelectionManager().select(soundInfo);
+            clickListener.clicked(soundInfo);
+        }
     }
 }

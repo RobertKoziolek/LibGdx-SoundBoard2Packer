@@ -16,6 +16,7 @@ import com.robcio.soundboard2.packer.entity.SoundInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundInfoAdapter;
+import com.robcio.soundboard2.packer.util.Command;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,7 @@ public class PacketTab extends Tab {
     private final PacketInfo packetInfo;
     private final SoundInfoHolder soundInfoHolder;
     private final PacketTabPane packetTabPane;
+    private final Command onShowCommand;
 
     @Inject
     public PacketTab(final PacketInfo packetInfo,
@@ -45,7 +47,7 @@ public class PacketTab extends Tab {
                     soundInfo -> packetTabPane.updateSoundContent(soundInfo,
                                                                   soundInfoAdapter::itemsDataChanged,
                                                                   () -> setDirty(true)));
-            final VisTextButton fileButton = new VisTextButton("Clear & load mp3 folder", new ChangeListener() {
+            final VisTextButton loadFilesButton = new VisTextButton("Clear & load mp3 folder", new ChangeListener() {
 
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -53,7 +55,7 @@ public class PacketTab extends Tab {
                     packetTabPane.openFiles(fileChooser);
                 }
             });
-            listView.setHeader(fileButton);
+            listView.setHeader(loadFilesButton);
             listView.getScrollPane()
                     .setScrollingDisabled(true, false);
         }
@@ -65,8 +67,14 @@ public class PacketTab extends Tab {
                     updateTitle(dirName);
                     setDirty(true);
                     updatePacketContent();
+                    soundInfoAdapter.selectFirst(listView.getClickListener());
                 }
             });
+        }
+        {
+            onShowCommand = () -> {
+                soundInfoAdapter.reselect(listView.getClickListener());
+            };
         }
     }
 
@@ -88,11 +96,11 @@ public class PacketTab extends Tab {
                .grow();
     }
 
-//    @Override
-//    public void onShow() {
-//        super.onShow();
-//        //TODO update sound content if filters changed or sth
-//    }
+    @Override
+    public void onShow() {
+        super.onShow();
+        onShowCommand.perform();
+    }
 
     @Override
     public boolean save() {

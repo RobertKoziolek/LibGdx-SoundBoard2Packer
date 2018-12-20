@@ -4,10 +4,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.*;
-import com.robcio.soundboard2.packer.entity.FilterHolder;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundFilterAdapter;
+import com.robcio.soundboard2.packer.gui.component.menu.FilterMenuBar;
 import com.robcio.soundboard2.packer.util.Command;
 import com.robcio.soundboard2.packer.util.SoundCreator;
 import com.robcio.soundboard2.packer.util.validator.NameValidator;
@@ -19,12 +19,12 @@ import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 public class SoundContent extends VisTable {
 
     private final SoundCreator soundCreator;
-    private final FilterHolder filterHolder;
+    private final FilterMenuBar filterMenuBar;
 
     @Inject
-    public SoundContent(final SoundCreator soundCreator, final FilterHolder filterHolder) {
+    public SoundContent(final SoundCreator soundCreator, final FilterMenuBar filterMenuBar) {
         this.soundCreator = soundCreator;
-        this.filterHolder = filterHolder;
+        this.filterMenuBar = filterMenuBar;
         left();
         add("This is sound content");
     }
@@ -57,28 +57,13 @@ public class SoundContent extends VisTable {
         add(nameField).growX()
                       .row();
 
-        //TODO popmenu to add filters from singleton holder
         final SoundFilterAdapter soundFilterAdapter = new SoundFilterAdapter(soundInfo.getFilters());
         final ListView<FilterInfo> filterView = new ListView<>(soundFilterAdapter);
         final VisTable filterHeader = new VisTable();
+
+        filterMenuBar.update(soundInfo.getFilters(), soundFilterAdapter::add, soundFilterAdapter::remove);
+        filterHeader.add(filterMenuBar.getTable());
         filterHeader.add(new VisLabel("Filters:"));
-        final Menu addMenu = new Menu("+");
-//        final Menu removeMenu = new Menu("-");//TODO remove filter menu
-        final MenuBar menuBar = new MenuBar();
-        menuBar.addMenu(addMenu);
-
-        filterHolder.getFilterInfos()
-                    .forEach(filterInfo -> {
-                        final MenuItem menuItem = new MenuItem(filterInfo.getName(), new ChangeListener() {
-                            @Override
-                            public void changed(ChangeEvent event, Actor actor) {
-                                soundFilterAdapter.add(filterInfo);
-                            }
-                        });
-                        addMenu.addItem(menuItem);
-                    });
-
-        filterHeader.add(menuBar.getTable());
         filterView.setHeader(filterHeader);
         filterView.getScrollPane()
                   .setScrollingDisabled(true, false);

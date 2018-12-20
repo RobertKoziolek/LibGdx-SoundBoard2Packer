@@ -39,8 +39,12 @@ public class PacketTabPane extends VisSplitPane {
     }
 
     public void openFiles(final FileChooser fileChooser) {
-        soundContent.clear();
+        clearSoundContent();
         soundContent.add(fileChooser)
                     .grow();
+    }
+
+    public void clearSoundContent() {
+        soundContent.clear();
     }
 }

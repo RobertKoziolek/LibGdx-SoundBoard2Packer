@@ -7,7 +7,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
-import com.robcio.soundboard2.packer.file.JsonWriter;
+import com.robcio.soundboard2.packer.file.PacketJsonWriter;
 import com.robcio.soundboard2.packer.util.Command;
 import com.robcio.soundboard2.packer.util.validator.NameValidator;
 
@@ -16,11 +16,11 @@ import java.util.function.Consumer;
 
 public class PacketContent extends VisTable {
 
-    private final JsonWriter jsonWriter;
+    private final PacketJsonWriter packetJsonWriter;
 
     @Inject
-    public PacketContent(final JsonWriter jsonWriter) {
-        this.jsonWriter = jsonWriter;
+    public PacketContent(final PacketJsonWriter packetJsonWriter) {
+        this.packetJsonWriter = packetJsonWriter;
         top();
         add("This is packet info");
     }
@@ -46,7 +46,7 @@ public class PacketContent extends VisTable {
         final VisTextButton writerButton = new VisTextButton("Save to file", new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
-                jsonWriter.savePacket(packetInfo, soundInfoHolder);
+                packetJsonWriter.savePacket(packetInfo, soundInfoHolder);
             }
         });
         add(nameField).growX()
