@@ -6,8 +6,8 @@ import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 
 
 //TODO All packets info and indicator info, all zipped with sounds and images
@@ -38,13 +38,17 @@ public class JsonWriter {
                            json.writeValue("file", soundInfo.getFileHandle()
                                                             .name()
                                                             .replace(".mp3", ""));
-//                           json.writeArrayStart("filters");
-//                           soundInfo.getFilterInfos()
-//                                    .forEach(filter -> {
-//                                        json.writeValue(filter);
-//                                    });
-//                           json.writeArrayEnd();
-                           json.writeValue("filters", soundInfo.getFilters(), ArrayList.class);
+                           json.writeArrayStart("filters");
+                           soundInfo.getFilters()
+                                    .forEach(filterInfo -> {
+                                        try {
+                                            json.getWriter()
+                                                .value(filterInfo.getName());
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                           json.writeArrayEnd();
                            //TODO writing suites to json
                            json.writeObjectEnd();
                        });
