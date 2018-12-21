@@ -34,7 +34,7 @@ public class PacketTab extends Tab {
     @Override
     public boolean save() {
         super.save();
-        final boolean saved = stateSaver.save(packetInfo);
+        final boolean saved = stateSaver.save();
         setDirty(!saved);
         return saved;
     }

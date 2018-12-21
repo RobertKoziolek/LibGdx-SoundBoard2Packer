@@ -13,9 +13,10 @@ public class PacketInfo implements Serializable {
     private SoundInfoHolder soundInfoHolder;
 
     @Inject
-    public PacketInfo(final SoundInfoHolder soundInfoHolder) {
+    public PacketInfo(final SoundInfoHolder soundInfoHolder, final PacketInfoHolder packetInfoHolder) {
         this.soundInfoHolder = soundInfoHolder;
         this.name = DEFAULT_NAME;
+        packetInfoHolder.add(this);
     }
 
     public String getName() {

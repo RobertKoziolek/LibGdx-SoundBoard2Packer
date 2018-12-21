@@ -6,7 +6,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.PackerComponent;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
-import com.robcio.soundboard2.packer.entity.PacketInfo;
+import com.robcio.soundboard2.packer.entity.PacketInfoHolder;
 import com.robcio.soundboard2.packer.gui.tab.PacketTab;
 
 import javax.inject.Inject;
@@ -21,19 +21,23 @@ public class StateSaver {
 
     private final PackerComponent packerComponent;
     private final FilterInfoHolder filterInfoHolder;
+    private final PacketInfoHolder packetInfoHolder;
 
     @Inject
-    public StateSaver(final PackerComponent packerComponent, final FilterInfoHolder filterInfoHolder) {
+    public StateSaver(final PackerComponent packerComponent,
+                      final FilterInfoHolder filterInfoHolder,
+                      final PacketInfoHolder packetInfoHolder) {
         this.packerComponent = packerComponent;
         this.filterInfoHolder = filterInfoHolder;
+        this.packetInfoHolder = packetInfoHolder;
     }
 
-    public boolean save(final PacketInfo packetInfo) {
+    public boolean save() {
         final FileHandle file = Gdx.files.external("packettabstate.tab");
         try (final ObjectOutputStream objectOutputStream = new ObjectOutputStream(file.write(false))) {
             objectOutputStream.writeObject(filterInfoHolder.getFilterInfos());
 
-            objectOutputStream.writeObject(packetInfo);
+            objectOutputStream.writeObject(packetInfoHolder);
             objectOutputStream.close();
             return true;
         } catch (IOException e) {
@@ -52,13 +56,16 @@ public class StateSaver {
                 filterInfoHolder.loadFilterInfos(filterInfos);
             }
             {
-                final PacketInfo packetInfo = (PacketInfo) objectInputStream.readObject();
-                final Tab packetTab = new PacketTab(this,
-                                                    packetInfo,
-                                                    packerComponent.packetTabPane(),
-                                                    packerComponent.fileChooser());
-                packerComponent.tabbedPanel()
-                               .add(packetTab);
+                final PacketInfoHolder packetInfoHolder = (PacketInfoHolder) objectInputStream.readObject();
+                packetInfoHolder.getPacketInfos()
+                                .forEach(packetInfo -> {
+                                    final Tab packetTab = new PacketTab(this,
+                                                                        packetInfo,
+                                                                        packerComponent.packetTabPane(),
+                                                                        packerComponent.fileChooser());
+                                    packerComponent.tabbedPanel()
+                                                   .add(packetTab);
+                                });
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

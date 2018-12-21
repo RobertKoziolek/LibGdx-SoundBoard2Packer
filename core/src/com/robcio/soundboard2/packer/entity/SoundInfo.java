@@ -50,8 +50,6 @@ public class SoundInfo implements Serializable {
         fileHandle = new FileHandle(aInputStream.readUTF());
         name = aInputStream.readUTF();
         filtersId = (HashSet<Integer>) aInputStream.readObject();
-        System.out.println("tibia");
-        filtersId.forEach(System.out::println);
         suites = (ArrayList<String>) aInputStream.readObject();
     }
 
