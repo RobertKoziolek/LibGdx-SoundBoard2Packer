@@ -6,6 +6,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.PackerComponent;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
+import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.PacketInfoHolder;
 import com.robcio.soundboard2.packer.gui.tab.PacketTab;
 
@@ -37,7 +38,7 @@ public class StateSaver {
         try (final ObjectOutputStream objectOutputStream = new ObjectOutputStream(file.write(false))) {
             objectOutputStream.writeObject(filterInfoHolder.getFilterInfos());
 
-            objectOutputStream.writeObject(packetInfoHolder);
+            objectOutputStream.writeObject(packetInfoHolder.getPacketInfos());
             objectOutputStream.close();
             return true;
         } catch (IOException e) {
@@ -45,9 +46,7 @@ public class StateSaver {
             return false;
         }
     }
-    //TODO multiple tabs loading/saving
 
-    //TODO should close all opened tabs upon loading to prevent error with filters and double tabs
     public void loadTabs() {
         final FileHandle file = Gdx.files.external("packettabstate.tab");
         try (final ObjectInputStream objectInputStream = new ObjectInputStream(file.read())) {
@@ -56,7 +55,8 @@ public class StateSaver {
                 filterInfoHolder.loadFilterInfos(filterInfos);
             }
             {
-                final PacketInfoHolder packetInfoHolder = (PacketInfoHolder) objectInputStream.readObject();
+                final ArrayList<PacketInfo> packetInfos = (ArrayList<PacketInfo>) objectInputStream.readObject();
+                packetInfoHolder.loadPacketInfos(packetInfos);
                 packetInfoHolder.getPacketInfos()
                                 .forEach(packetInfo -> {
                                     final Tab packetTab = new PacketTab(this,

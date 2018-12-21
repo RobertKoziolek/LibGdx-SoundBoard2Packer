@@ -40,4 +40,12 @@ public class PacketTabPanel extends TabbedPane {
             }
         });
     }
+
+    public void closeCloseableTabs() {
+        getUIOrderedTabs().forEach(tab -> {
+            if (tab.isCloseableByUser()) {
+                remove(tab);
+            }
+        });
+    }
 }

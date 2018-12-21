@@ -67,6 +67,7 @@ public class SoundContent extends VisTable {
         final ArrayList<FilterInfo> soundFilterInfos = filterInfoHolder.getFilterInfos(filtersId);
         final SoundFilterAdapter soundFilterAdapter = new SoundFilterAdapter(soundFilterInfos, filtersId);
         final ListView<FilterInfo> filterView = new ListView<>(soundFilterAdapter);
+        //TODO touchdown listener z UIUtils.right() dla szybszego dodawania, middle na usuwanie moze?
         final VisTable filterHeader = new VisTable();
 
         filterMenuBar.update(soundFilterInfos, soundFilterAdapter::add, soundFilterAdapter::remove);

@@ -22,4 +22,10 @@ public class PacketInfoHolder implements Serializable {
     public void add(final PacketInfo packetInfo) {
         packetInfos.add(packetInfo);
     }
+
+    public void loadPacketInfos(final ArrayList<PacketInfo> packetInfos) {
+        this.packetInfos.clear();
+        this.packetInfos.addAll(packetInfos);
+
+    }
 }

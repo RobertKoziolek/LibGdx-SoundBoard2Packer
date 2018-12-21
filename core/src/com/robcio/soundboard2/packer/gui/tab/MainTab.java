@@ -40,11 +40,13 @@ public class MainTab extends Tab {
         final VisTextButton loadPackageButton = new VisTextButton("Load package", new ChangeListener() {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
+                tabbedPanel.closeCloseableTabs();
                 stateSaver.loadTabs();
                 filterContent.rebuild();
             }
         });
         content.add(loadPackageButton);
+
     }
 
     @Override
