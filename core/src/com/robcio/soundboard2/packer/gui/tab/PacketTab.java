@@ -13,7 +13,7 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
-import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
+import com.robcio.soundboard2.packer.file.StateSaver;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundInfoAdapter;
 import com.robcio.soundboard2.packer.util.Command;
@@ -23,21 +23,33 @@ import javax.inject.Inject;
 import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 
 public class PacketTab extends Tab {
-    private final VisTable content = new VisTable();
+    private final StateSaver stateSaver;
     private final PacketInfo packetInfo;
-    private final SoundInfoHolder soundInfoHolder;
     private final PacketTabPane packetTabPane;
+
+    private final VisTable content = new VisTable();
     private final Command onShowCommand;
 
+    //TODO packets should be visible in main tab, closing a tab should not delete any packet
+    @Override
+    public boolean save() {
+        super.save();
+        final boolean saved = stateSaver.save(packetInfo);
+        setDirty(!saved);
+        return saved;
+    }
+
     @Inject
-    public PacketTab(final PacketInfo packetInfo,
-                     final FileChooser fileChooser,
-                     final SoundInfoAdapter soundInfoAdapter,
-                     final PacketTabPane packetTabPane) {
+    public PacketTab(final StateSaver stateSaver,
+                     final PacketInfo packetInfo,
+                     final PacketTabPane packetTabPane,
+                     final FileChooser fileChooser) {
         super(true, true);
+        this.stateSaver = stateSaver;
         this.packetInfo = packetInfo;
-        this.soundInfoHolder = soundInfoAdapter.getSoundInfoHolder();
         this.packetTabPane = packetTabPane;
+
+        final SoundInfoAdapter soundInfoAdapter = new SoundInfoAdapter(packetInfo.getSoundInfoHolder());
         final ListView<SoundInfo> listView = new ListView<>(soundInfoAdapter);
         initializeLayout(packetTabPane, listView);
         updatePacketContent();
@@ -79,7 +91,7 @@ public class PacketTab extends Tab {
     }
 
     private void updatePacketContent() {
-        packetTabPane.updatePacketContent(packetInfo, soundInfoHolder, this::save, this::updateTitle);
+        packetTabPane.updatePacketContent(packetInfo, this::save, this::updateTitle);
     }
 
     private void updateTitle(final String title) {
@@ -100,14 +112,6 @@ public class PacketTab extends Tab {
     public void onShow() {
         super.onShow();
         onShowCommand.perform();
-    }
-
-    @Override
-    public boolean save() {
-        super.save();
-        setDirty(false);
-        //TODO saving
-        return true;
     }
 
     @Override

@@ -10,14 +10,12 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 
 public class SoundInfoAdapter extends ArrayListAdapter<SoundInfo, VisTable> {
 
     private final SoundInfoHolder soundInfoHolder;
 
-    @Inject
     public SoundInfoAdapter(final SoundInfoHolder soundInfoHolder) {
         super(soundInfoHolder.getSoundInfos());
         this.soundInfoHolder = soundInfoHolder;

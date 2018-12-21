@@ -3,6 +3,7 @@ package com.robcio.soundboard2.packer.file;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
+import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 
@@ -19,13 +20,17 @@ import java.util.stream.Collectors;
 @Singleton
 public class PacketJsonWriter {
 
-    @Inject
-    public PacketJsonWriter() {
+    private final FilterInfoHolder filterInfoHolder;
 
+    @Inject
+    public PacketJsonWriter(final FilterInfoHolder filterInfoHolder) {
+
+        this.filterInfoHolder = filterInfoHolder;
     }
 
-    public void savePacket(final PacketInfo packetInfo, final SoundInfoHolder soundInfoHolder) {
+    public void savePacket(final PacketInfo packetInfo) {
         System.out.println("Saving " + packetInfo.getName());
+        final SoundInfoHolder soundInfoHolder = packetInfo.getSoundInfoHolder();
         final StringWriter stringWriter = new StringWriter();
 
 
@@ -43,10 +48,11 @@ public class PacketJsonWriter {
                            json.writeValue("file", soundInfo.getFileHandle()
                                                             .name()
                                                             .replace(".mp3", ""));
-                           writeArray(json, "filters", packetInfo.getName(), soundInfo.getFilters()
-                                                                                      .stream()
-                                                                                      .map(FilterInfo::getName)
-                                                                                      .collect(Collectors.toList()));
+                           final List<String> filters = filterInfoHolder.getFilterInfos(soundInfo.getFiltersId())
+                                                                        .stream()
+                                                                        .map(FilterInfo::getName)
+                                                                        .collect(Collectors.toList());
+                           writeArray(json, "filters", packetInfo.getName(), filters);
                            writeArray(json, "suites", null, soundInfo.getSuites());
                            json.writeObjectEnd();
                        });

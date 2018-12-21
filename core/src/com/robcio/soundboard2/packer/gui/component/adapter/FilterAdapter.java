@@ -3,8 +3,8 @@ package com.robcio.soundboard2.packer.gui.component.adapter;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.ui.util.adapter.ArrayListAdapter;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.robcio.soundboard2.packer.entity.FilterHolder;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
+import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,9 +12,12 @@ import javax.inject.Singleton;
 @Singleton
 public class FilterAdapter extends ArrayListAdapter<FilterInfo, VisLabel> {
 
+    private final FilterInfoHolder filterInfoHolder;
+
     @Inject
-    public FilterAdapter(final FilterHolder filterHolder) {
-        super(filterHolder.getFilterInfos());
+    public FilterAdapter(final FilterInfoHolder filterInfoHolder) {
+        super(filterInfoHolder.getFilterInfos());
+        this.filterInfoHolder = filterInfoHolder;
         setSelectionMode(SelectionMode.SINGLE);
     }
 

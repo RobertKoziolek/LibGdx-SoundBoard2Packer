@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.*;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
+import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundFilterAdapter;
 import com.robcio.soundboard2.packer.gui.component.menu.FilterMenuBar;
@@ -13,6 +14,8 @@ import com.robcio.soundboard2.packer.util.SoundCreator;
 import com.robcio.soundboard2.packer.util.validator.NameValidator;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Set;
 
 import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 
@@ -20,13 +23,16 @@ public class SoundContent extends VisTable {
 
     private final SoundCreator soundCreator;
     private final FilterMenuBar filterMenuBar;
+    private final FilterInfoHolder filterInfoHolder;
 
     @Inject
-    public SoundContent(final SoundCreator soundCreator, final FilterMenuBar filterMenuBar) {
+    public SoundContent(final SoundCreator soundCreator,
+                        final FilterMenuBar filterMenuBar,
+                        final FilterInfoHolder filterInfoHolder) {
         this.soundCreator = soundCreator;
         this.filterMenuBar = filterMenuBar;
+        this.filterInfoHolder = filterInfoHolder;
         left();
-        add("This is sound content");
     }
 
     public void update(final SoundInfo soundInfo,
@@ -57,11 +63,13 @@ public class SoundContent extends VisTable {
         add(nameField).growX()
                       .row();
 
-        final SoundFilterAdapter soundFilterAdapter = new SoundFilterAdapter(soundInfo.getFilters());
+        final Set<Integer> filtersId = soundInfo.getFiltersId();
+        final ArrayList<FilterInfo> soundFilterInfos = filterInfoHolder.getFilterInfos(filtersId);
+        final SoundFilterAdapter soundFilterAdapter = new SoundFilterAdapter(soundFilterInfos, filtersId);
         final ListView<FilterInfo> filterView = new ListView<>(soundFilterAdapter);
         final VisTable filterHeader = new VisTable();
 
-        filterMenuBar.update(soundInfo.getFilters(), soundFilterAdapter::add, soundFilterAdapter::remove);
+        filterMenuBar.update(soundFilterInfos, soundFilterAdapter::add, soundFilterAdapter::remove);
         filterHeader.add(filterMenuBar.getTable());
         filterHeader.add(new VisLabel("Filters:"));
         filterView.setHeader(filterHeader);

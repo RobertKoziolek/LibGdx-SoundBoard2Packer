@@ -1,9 +1,10 @@
 package com.robcio.soundboard2.packer.entity;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SoundInfoHolder {
+public class SoundInfoHolder implements Serializable {
 
     private ArrayList<SoundInfo> soundInfos;
 

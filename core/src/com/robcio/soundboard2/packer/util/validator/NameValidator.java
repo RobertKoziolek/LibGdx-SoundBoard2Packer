@@ -9,6 +9,7 @@ public class NameValidator implements InputValidator {
 
     @Override
     public boolean validateInput(final String input) {
+        //TODO should check filters/packets for name collision, mark filters red
         return !input.isEmpty();
     }
 }

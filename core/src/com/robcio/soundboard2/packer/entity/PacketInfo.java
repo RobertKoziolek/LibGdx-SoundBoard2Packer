@@ -2,16 +2,19 @@ package com.robcio.soundboard2.packer.entity;
 
 
 import javax.inject.Inject;
+import java.io.Serializable;
 
-public class PacketInfo {
+public class PacketInfo implements Serializable {
 
     private static final String DEFAULT_NAME = "Packet";
 
     private String name;
     private String folder;
+    private SoundInfoHolder soundInfoHolder;
 
     @Inject
-    public PacketInfo() {
+    public PacketInfo(final SoundInfoHolder soundInfoHolder) {
+        this.soundInfoHolder = soundInfoHolder;
         this.name = DEFAULT_NAME;
     }
 
@@ -28,5 +31,9 @@ public class PacketInfo {
 
     public String getFolder() {
         return folder;
+    }
+
+    public SoundInfoHolder getSoundInfoHolder() {
+        return soundInfoHolder;
     }
 }

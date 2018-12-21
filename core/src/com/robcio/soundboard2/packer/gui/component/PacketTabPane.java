@@ -4,7 +4,6 @@ import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
-import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
 import com.robcio.soundboard2.packer.gui.tab.content.packet.PacketContent;
 import com.robcio.soundboard2.packer.gui.tab.content.packet.SoundContent;
 import com.robcio.soundboard2.packer.util.Command;
@@ -26,10 +25,9 @@ public class PacketTabPane extends VisSplitPane {
     }
 
     public void updatePacketContent(final PacketInfo packetInfo,
-                                    final SoundInfoHolder soundInfoHolder,
                                     final Command saveCommand,
                                     final Consumer<String> updateTitleCommand) {
-        packetContent.update(packetInfo, soundInfoHolder, saveCommand, updateTitleCommand);
+        packetContent.update(packetInfo, saveCommand, updateTitleCommand);
     }
 
     public void updateSoundContent(final SoundInfo soundInfo,
