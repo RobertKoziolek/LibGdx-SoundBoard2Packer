@@ -1,38 +1,42 @@
-package com.robcio.soundboard2.packer.file;
+package com.robcio.soundboard2.packer.file.json;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
-import com.robcio.soundboard2.packer.entity.FilterInfo;
-import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
-import com.robcio.soundboard2.packer.entity.PacketInfo;
-import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
+import com.robcio.soundboard2.packer.entity.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.badlogic.gdx.utils.JsonWriter.OutputType.javascript;
+import static com.robcio.soundboard2.packer.file.Constants.PACKAGE_JSON;
 
 //TODO All packets info and indicator info, all zipped with sounds and images
 @Singleton
-public class PacketJsonWriter {
+public class PacketJsonWriter extends JsonWriter {
 
+    private final PacketInfoHolder packetInfoHolder;
     private final FilterInfoHolder filterInfoHolder;
 
     @Inject
-    public PacketJsonWriter(final FilterInfoHolder filterInfoHolder) {
-
+    public PacketJsonWriter(final PacketInfoHolder packetInfoHolder, final FilterInfoHolder filterInfoHolder) {
+        this.packetInfoHolder = packetInfoHolder;
         this.filterInfoHolder = filterInfoHolder;
     }
 
-    public void savePacket(final PacketInfo packetInfo) {
+    @Override
+    public void write() {
+        packetInfoHolder.getPacketInfos()
+                        .forEach(this::savePacket);
+    }
+
+    private void savePacket(final PacketInfo packetInfo) {
         System.out.println("Saving " + packetInfo.getName());
         final SoundInfoHolder soundInfoHolder = packetInfo.getSoundInfoHolder();
         final StringWriter stringWriter = new StringWriter();
-
 
         final Json json = new Json();
         json.setWriter(stringWriter);
@@ -52,32 +56,15 @@ public class PacketJsonWriter {
                                                                         .stream()
                                                                         .map(FilterInfo::getName)
                                                                         .collect(Collectors.toList());
-                           writeArray(json, "filters", packetInfo.getName(), filters);
-                           writeArray(json, "suites", null, soundInfo.getSuites());
+                           writeArray(json, "filter", packetInfo.getName(), filters);
+                           writeArray(json, "suite", null, soundInfo.getSuites());
                            json.writeObjectEnd();
                        });
         json.writeArrayEnd();
         json.writeObjectEnd();
 
-        System.out.println(json.prettyPrint(stringWriter.toString()));
-    }
-
-    private void writeArray(final Json json, final String name, final String first, final List<String> values) {
-        json.writeArrayStart(name);
-        final JsonWriter writer = json.getWriter();
-        if (!Objects.isNull(first)) {
-            writeValue(writer, first);
-        }
-        values.forEach(value -> writeValue(writer, value));
-        json.writeArrayEnd();
-    }
-
-    private void writeValue(final JsonWriter writer, final String value) {
-        try {
-            writer.value(value);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-
+        final FileHandle fileHandle = Gdx.files.external(PACKAGE_JSON + "/" + packetInfo.getFolder() + ".json");
+        json.setOutputType(javascript);
+        fileHandle.writeString(json.prettyPrint(stringWriter.toString()), false);
     }
 }

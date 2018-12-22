@@ -36,8 +36,7 @@ public class SoundContent extends VisTable {
     }
 
     public void update(final SoundInfo soundInfo,
-                       final Command updateViewCommand,
-                       final Command setDirtyCommand) {
+                       final Command updateViewCommand) {
         clear();
         final Sound sound = soundCreator.create(soundInfo.getFileHandle());
         final VisTextButton playButton = new VisTextButton("Play", new ChangeListener() {
@@ -57,7 +56,6 @@ public class SoundContent extends VisTable {
             if (nameField.isInputValid()) {
                 soundInfo.setName(nameField.getText());
                 updateViewCommand.perform();
-                setDirtyCommand.perform();
             }
         });
         add(nameField).growX()

@@ -17,24 +17,27 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import static com.robcio.soundboard2.packer.file.Constants.SESSION_FILE;
+
 @Singleton
-public class StateSaver {
+public class SessionSaver {
+    //TODO sesion saver, keep some of the last sessions (with id) + file chooser?
 
     private final PackerComponent packerComponent;
     private final FilterInfoHolder filterInfoHolder;
     private final PacketInfoHolder packetInfoHolder;
 
     @Inject
-    public StateSaver(final PackerComponent packerComponent,
-                      final FilterInfoHolder filterInfoHolder,
-                      final PacketInfoHolder packetInfoHolder) {
+    public SessionSaver(final PackerComponent packerComponent,
+                        final FilterInfoHolder filterInfoHolder,
+                        final PacketInfoHolder packetInfoHolder) {
         this.packerComponent = packerComponent;
         this.filterInfoHolder = filterInfoHolder;
         this.packetInfoHolder = packetInfoHolder;
     }
 
     public boolean save() {
-        final FileHandle file = Gdx.files.external("packettabstate.tab");
+        final FileHandle file = Gdx.files.external(SESSION_FILE);
         try (final ObjectOutputStream objectOutputStream = new ObjectOutputStream(file.write(false))) {
             objectOutputStream.writeObject(filterInfoHolder.getFilterInfos());
 
@@ -48,7 +51,7 @@ public class StateSaver {
     }
 
     public void loadTabs() {
-        final FileHandle file = Gdx.files.external("packettabstate.tab");
+        final FileHandle file = Gdx.files.external(SESSION_FILE);
         try (final ObjectInputStream objectInputStream = new ObjectInputStream(file.read())) {
             {
                 final ArrayList<FilterInfo> filterInfos = (ArrayList<FilterInfo>) objectInputStream.readObject();

@@ -18,6 +18,8 @@ public class SoundBoard2Packer extends Game {
     @Override
     public void dispose() {
         super.dispose();
+        packerComponent.stateSaver()
+                       .save();
         packerComponent.soundCreator()
                        .dispose();
         getScreen().dispose();

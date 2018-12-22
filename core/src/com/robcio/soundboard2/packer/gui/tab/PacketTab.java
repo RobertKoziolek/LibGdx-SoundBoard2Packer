@@ -13,7 +13,7 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
-import com.robcio.soundboard2.packer.file.StateSaver;
+import com.robcio.soundboard2.packer.file.SessionSaver;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundInfoAdapter;
 import com.robcio.soundboard2.packer.util.Command;
@@ -23,29 +23,20 @@ import javax.inject.Inject;
 import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 
 public class PacketTab extends Tab {
-    private final StateSaver stateSaver;
+    private final SessionSaver sessionSaver;
     private final PacketInfo packetInfo;
     private final PacketTabPane packetTabPane;
 
     private final VisTable content = new VisTable();
     private final Command onShowCommand;
 
-    //TODO packets should be visible in main tab, closing a tab should not delete any packet
-    @Override
-    public boolean save() {
-        super.save();
-        final boolean saved = stateSaver.save();
-        setDirty(!saved);
-        return saved;
-    }
-
     @Inject
-    public PacketTab(final StateSaver stateSaver,
+    public PacketTab(final SessionSaver sessionSaver,
                      final PacketInfo packetInfo,
                      final PacketTabPane packetTabPane,
                      final FileChooser fileChooser) {
         super(true, true);
-        this.stateSaver = stateSaver;
+        this.sessionSaver = sessionSaver;
         this.packetInfo = packetInfo;
         this.packetTabPane = packetTabPane;
 
@@ -57,8 +48,7 @@ public class PacketTab extends Tab {
         {
             listView.setItemClickListener(
                     soundInfo -> packetTabPane.updateSoundContent(soundInfo,
-                                                                  soundInfoAdapter::itemsDataChanged,
-                                                                  () -> setDirty(true)));
+                                                                  soundInfoAdapter::itemsDataChanged));
             final VisTextButton loadFilesButton = new VisTextButton("Clear & load mp3 folder", new ChangeListener() {
 
                 @Override

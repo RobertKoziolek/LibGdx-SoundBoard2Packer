@@ -7,7 +7,8 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.PackerComponent;
-import com.robcio.soundboard2.packer.file.StateSaver;
+import com.robcio.soundboard2.packer.file.SessionSaver;
+import com.robcio.soundboard2.packer.file.json.JsonWriterFacade;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPanel;
 import com.robcio.soundboard2.packer.gui.tab.content.main.FilterContent;
 
@@ -16,14 +17,19 @@ import javax.inject.Inject;
 import static com.robcio.soundboard2.packer.util.Constants.FILTER_VIEW_WIDTH;
 
 public class MainTab extends Tab {
+
+    private final JsonWriterFacade jsonWriterFacade;
+
     private final VisTable content = new VisTable();
 
     @Inject
     public MainTab(final PackerComponent packerComponent,
+                   final JsonWriterFacade jsonWriterFacade,
                    final PacketTabPanel tabbedPanel,
                    final FilterContent filterContent,
-                   final StateSaver stateSaver) {
+                   final SessionSaver sessionSaver) {
         super(false, false);
+        this.jsonWriterFacade = jsonWriterFacade;
         content.add(filterContent)
                .growY()
                .width(FILTER_VIEW_WIDTH);
@@ -41,11 +47,19 @@ public class MainTab extends Tab {
             @Override
             public void changed(final ChangeEvent event, final Actor actor) {
                 tabbedPanel.closeCloseableTabs();
-                stateSaver.loadTabs();
+                sessionSaver.loadTabs();
                 filterContent.rebuild();
             }
         });
         content.add(loadPackageButton);
+
+        final VisTextButton writeToFileButton = new VisTextButton("Export all", new ChangeListener() {
+            @Override
+            public void changed(final ChangeEvent event, final Actor actor) {
+                jsonWriterFacade.writeAll();
+            }
+        });
+        content.add(writeToFileButton);
 
     }
 

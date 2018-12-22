@@ -1,6 +1,7 @@
 package com.robcio.soundboard2.packer;
 
 import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.robcio.soundboard2.packer.file.SessionSaver;
 import com.robcio.soundboard2.packer.gui.MainScreen;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPanel;
@@ -25,4 +26,6 @@ public interface PackerComponent {
     PacketTabPane packetTabPane();
 
     PacketTabPanel tabbedPanel();
+
+    SessionSaver stateSaver();
 }

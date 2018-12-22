@@ -10,4 +10,5 @@ public class Constants {
 
     public static final int TAB_PANEL_HEIGHT = APP_HEIGHT / 30;
 
+
 }

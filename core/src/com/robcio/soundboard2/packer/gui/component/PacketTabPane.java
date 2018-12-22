@@ -31,9 +31,8 @@ public class PacketTabPane extends VisSplitPane {
     }
 
     public void updateSoundContent(final SoundInfo soundInfo,
-                                   final Command updateViewCommand,
-                                   final Command setDirtyCommand) {
-        soundContent.update(soundInfo, updateViewCommand, setDirtyCommand);
+                                   final Command updateViewCommand) {
+        soundContent.update(soundInfo, updateViewCommand);
     }
 
     public void openFiles(final FileChooser fileChooser) {
