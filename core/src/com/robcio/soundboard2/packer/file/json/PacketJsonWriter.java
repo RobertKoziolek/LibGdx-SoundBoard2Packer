@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import static com.badlogic.gdx.utils.JsonWriter.OutputType.javascript;
 import static com.robcio.soundboard2.packer.file.Constants.PACKAGE_JSON;
 
-//TODO All packets info and indicator info, all zipped with sounds and images
 @Singleton
 public class PacketJsonWriter extends JsonWriter {
 
