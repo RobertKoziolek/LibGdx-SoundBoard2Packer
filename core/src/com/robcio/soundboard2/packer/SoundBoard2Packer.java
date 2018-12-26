@@ -18,8 +18,11 @@ public class SoundBoard2Packer extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        packerComponent.stateSaver()
-                       .save();
+        final boolean saved = packerComponent.stateSaver()
+                                             .save();
+        if (!saved) {
+            System.out.println("Could not save session");
+        }
         packerComponent.soundCreator()
                        .dispose();
         getScreen().dispose();

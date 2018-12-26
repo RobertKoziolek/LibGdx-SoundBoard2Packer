@@ -13,17 +13,16 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
-import com.robcio.soundboard2.packer.file.SessionSaver;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundInfoAdapter;
 import com.robcio.soundboard2.packer.util.Command;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 
 public class PacketTab extends Tab {
-    private final SessionSaver sessionSaver;
     private final PacketInfo packetInfo;
     private final PacketTabPane packetTabPane;
 
@@ -31,12 +30,10 @@ public class PacketTab extends Tab {
     private final Command onShowCommand;
 
     @Inject
-    public PacketTab(final SessionSaver sessionSaver,
-                     final PacketInfo packetInfo,
+    public PacketTab(final PacketInfo packetInfo,
                      final PacketTabPane packetTabPane,
-                     final FileChooser fileChooser) {
+                     @Named("packetSounds") final FileChooser fileChooser) {
         super(true, true);
-        this.sessionSaver = sessionSaver;
         this.packetInfo = packetInfo;
         this.packetTabPane = packetTabPane;
 

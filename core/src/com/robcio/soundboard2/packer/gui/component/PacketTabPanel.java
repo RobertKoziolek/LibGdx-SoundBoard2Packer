@@ -5,8 +5,10 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
+import com.robcio.soundboard2.packer.gui.tab.PacketTab;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import static com.robcio.soundboard2.packer.util.Constants.TAB_PANEL_HEIGHT;
@@ -14,9 +16,12 @@ import static com.robcio.soundboard2.packer.util.Constants.TAB_PANEL_HEIGHT;
 @Singleton
 public class PacketTabPanel extends TabbedPane {
 
+    private final Provider<PacketTab> packetTabProvider;
+
     @Inject
-    public PacketTabPanel() {
+    public PacketTabPanel(final Provider<PacketTab> packetTabProvider) {
         super();
+        this.packetTabProvider = packetTabProvider;
     }
 
     public void initialize(final Table root) {
@@ -39,6 +44,10 @@ public class PacketTabPanel extends TabbedPane {
                          .fill();
             }
         });
+    }
+
+    public void addPacketTab() {
+        add(packetTabProvider.get());
     }
 
     public void closeCloseableTabs() {

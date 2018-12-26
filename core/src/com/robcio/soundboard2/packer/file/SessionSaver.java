@@ -2,15 +2,19 @@ package com.robcio.soundboard2.packer.file;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
-import com.robcio.soundboard2.packer.PackerComponent;
 import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.PacketInfoHolder;
+import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
+import com.robcio.soundboard2.packer.gui.component.PacketTabPanel;
 import com.robcio.soundboard2.packer.gui.tab.PacketTab;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -23,15 +27,21 @@ import static com.robcio.soundboard2.packer.file.Constants.SESSION_FILE;
 public class SessionSaver {
     //TODO sesion saver, keep some of the last sessions (with id) + file chooser?
 
-    private final PackerComponent packerComponent;
+    private final Provider<PacketTabPanel> packetTabPanelProvider;
+    private final Provider<FileChooser> fileChooserProvider;
+    private final Provider<PacketTabPane> packetTabPaneProvider;
     private final FilterInfoHolder filterInfoHolder;
     private final PacketInfoHolder packetInfoHolder;
 
     @Inject
-    public SessionSaver(final PackerComponent packerComponent,
+    public SessionSaver(final Provider<PacketTabPanel> packetTabPanelProvider,
+                        @Named("packetSounds") final Provider<FileChooser> fileChooserProvider,
+                        final Provider<PacketTabPane> packetTabPaneProvider,
                         final FilterInfoHolder filterInfoHolder,
                         final PacketInfoHolder packetInfoHolder) {
-        this.packerComponent = packerComponent;
+        this.packetTabPanelProvider = packetTabPanelProvider;
+        this.fileChooserProvider = fileChooserProvider;
+        this.packetTabPaneProvider = packetTabPaneProvider;
         this.filterInfoHolder = filterInfoHolder;
         this.packetInfoHolder = packetInfoHolder;
     }
@@ -40,9 +50,7 @@ public class SessionSaver {
         final FileHandle file = Gdx.files.external(SESSION_FILE);
         try (final ObjectOutputStream objectOutputStream = new ObjectOutputStream(file.write(false))) {
             objectOutputStream.writeObject(filterInfoHolder.getFilterInfos());
-
             objectOutputStream.writeObject(packetInfoHolder.getPacketInfos());
-            objectOutputStream.close();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,12 +70,11 @@ public class SessionSaver {
                 packetInfoHolder.loadPacketInfos(packetInfos);
                 packetInfoHolder.getPacketInfos()
                                 .forEach(packetInfo -> {
-                                    final Tab packetTab = new PacketTab(this,
-                                                                        packetInfo,
-                                                                        packerComponent.packetTabPane(),
-                                                                        packerComponent.fileChooser());
-                                    packerComponent.tabbedPanel()
-                                                   .add(packetTab);
+                                    final Tab packetTab = new PacketTab(packetInfo,
+                                                                        packetTabPaneProvider.get(),
+                                                                        fileChooserProvider.get());
+                                    packetTabPanelProvider.get()
+                                                          .add(packetTab);
                                 });
             }
         } catch (IOException | ClassNotFoundException e) {

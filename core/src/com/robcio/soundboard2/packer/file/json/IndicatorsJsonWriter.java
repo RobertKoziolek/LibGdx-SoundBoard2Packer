@@ -3,13 +3,14 @@ package com.robcio.soundboard2.packer.file.json;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
+import com.robcio.soundboard2.packer.entity.ImageFilterInfo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.StringWriter;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.badlogic.gdx.utils.JsonWriter.OutputType.javascript;
 import static com.robcio.soundboard2.packer.file.Constants.PACKAGE_JSON_INDICATORS;
@@ -29,19 +30,23 @@ class IndicatorsJsonWriter extends JsonWriter {
         System.out.println("Saving indicator info");
         final StringWriter stringWriter = new StringWriter();
 
-        final ArrayList<FilterInfo> filterInfos = filterInfoHolder.getFilterInfos();
+        final List<ImageFilterInfo> indicators = filterInfoHolder.getFilterInfos()
+                                                                 .stream()
+                                                                 .filter(f -> f instanceof ImageFilterInfo)
+                                                                 .map(f -> (ImageFilterInfo) f)
+                                                                 .collect(Collectors.toList());
 
         final Json json = new Json();
         json.setWriter(stringWriter);
         json.writeObjectStart();
         json.writeArrayStart("indicators");
         json.writeObjectStart();
-
-        //TODO foreach and align property
-        json.writeValue("name", "name");
-        json.writeValue("file", "filename");
-        json.writeValue("align", "ALIGN");
-
+        indicators.forEach(imageFilterInfo -> {
+            json.writeValue("name", imageFilterInfo.getName());
+            json.writeValue("file", imageFilterInfo.getImage()
+                                                   .name());
+            json.writeValue("align", imageFilterInfo.getAlign());
+        });
         json.writeObjectEnd();
         json.writeArrayEnd();
         json.writeObjectEnd();
