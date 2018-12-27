@@ -17,7 +17,6 @@ public class FileChooserModule {
 
     @Provides
     @Named("packetSounds")
-    //TODO file chooser for image and packet for reading later, will need @qualifier
     public FileChooser providePacketSoundsFileChooser() {
         final FileChooser fileChooser = new FileChooser(FileChooser.Mode.OPEN);
         fileChooser.setSelectionMode(FileChooser.SelectionMode.DIRECTORIES);
@@ -30,7 +29,6 @@ public class FileChooserModule {
 
     @Provides
     @Named("image")
-    //TODO file chooser for image and packet for reading later, will need @qualifier
     public FileChooser provideFileChooser() {
         final FileChooser fileChooser = new FileChooser(FileChooser.Mode.OPEN);
         fileChooser.setSelectionMode(FileChooser.SelectionMode.FILES);

@@ -1,11 +1,10 @@
 package com.robcio.soundboard2.packer.gui.tab.content.packet;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
+import com.robcio.soundboard2.packer.util.ButtonHelper;
 import com.robcio.soundboard2.packer.util.Command;
 import com.robcio.soundboard2.packer.util.validator.NameValidator;
 
@@ -30,12 +29,7 @@ public class PacketContent extends VisTable {
                 updateTitleCommand.accept(nameField.getText());
             }
         });
-        final VisTextButton saveButton = new VisTextButton("Save packet", new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                saveCommand.perform();
-            }
-        });
+        final VisTextButton saveButton = ButtonHelper.textButton("Save packet", saveCommand);
         add(nameField).growX()
                       .row();
         add(saveButton).colspan(2)

@@ -8,7 +8,7 @@ import com.robcio.soundboard2.packer.entity.FilterInfo;
 import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.PacketInfoHolder;
-import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
+import com.robcio.soundboard2.packer.gui.component.PacketAndSoundDetailPane;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPanel;
 import com.robcio.soundboard2.packer.gui.tab.PacketTab;
 
@@ -29,14 +29,14 @@ public class SessionSaver {
 
     private final Provider<PacketTabPanel> packetTabPanelProvider;
     private final Provider<FileChooser> fileChooserProvider;
-    private final Provider<PacketTabPane> packetTabPaneProvider;
+    private final Provider<PacketAndSoundDetailPane> packetTabPaneProvider;
     private final FilterInfoHolder filterInfoHolder;
     private final PacketInfoHolder packetInfoHolder;
 
     @Inject
     public SessionSaver(final Provider<PacketTabPanel> packetTabPanelProvider,
                         @Named("packetSounds") final Provider<FileChooser> fileChooserProvider,
-                        final Provider<PacketTabPane> packetTabPaneProvider,
+                        final Provider<PacketAndSoundDetailPane> packetTabPaneProvider,
                         final FilterInfoHolder filterInfoHolder,
                         final PacketInfoHolder packetInfoHolder) {
         this.packetTabPanelProvider = packetTabPanelProvider;

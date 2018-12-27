@@ -11,13 +11,13 @@ import com.robcio.soundboard2.packer.util.Command;
 import javax.inject.Inject;
 import java.util.function.Consumer;
 
-public class PacketTabPane extends VisSplitPane {
+public class PacketAndSoundDetailPane extends VisSplitPane {
 
     private final PacketContent packetContent;
     private final SoundContent soundContent;
 
     @Inject
-    public PacketTabPane(final PacketContent packetContent, final SoundContent soundContent) {
+    public PacketAndSoundDetailPane(final PacketContent packetContent, final SoundContent soundContent) {
         super(packetContent, soundContent, true);
         this.packetContent = packetContent;
         this.soundContent = soundContent;

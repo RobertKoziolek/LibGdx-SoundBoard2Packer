@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-//TODO make a module out of it all just to make it cleaner
 //TODO zipped
 public class JsonWriterFacade {
 
@@ -22,7 +21,6 @@ public class JsonWriterFacade {
         this.packetJsonWriter = packetJsonWriter;
     }
 
-    //TODO copy sounds to package export
     public void writeAll() {
         allPacketsInfoJsonWriter.write();
         indicatorsJsonWriter.write();

@@ -1,8 +1,7 @@
 package com.robcio.soundboard2.packer.gui.tab;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -10,6 +9,7 @@ import com.robcio.soundboard2.packer.file.PackageWriter;
 import com.robcio.soundboard2.packer.file.SessionSaver;
 import com.robcio.soundboard2.packer.gui.component.PacketTabPanel;
 import com.robcio.soundboard2.packer.gui.tab.content.main.FilterContent;
+import com.robcio.soundboard2.packer.util.ButtonHelper;
 
 import javax.inject.Inject;
 
@@ -23,35 +23,23 @@ public class MainTab extends Tab {
                    final FilterContent filterContent,
                    final SessionSaver sessionSaver) {
         super(false, false);
-        content.add(filterContent)
+
+        final VisTable controlTable = new VisTable();
+        controlTable.top();
+        final VisSplitPane splitPane = new VisSplitPane(controlTable, filterContent, true);
+        splitPane.setSplitAmount(0.2f);
+        final VisTextButton addPacketButton = ButtonHelper.textButton("Add packet", tabbedPanel::addPacketTab);
+        final VisTextButton writeToFileButton = ButtonHelper.textButton("Export all", packageWriter::write);
+        final VisTextButton loadLastSessionButton = ButtonHelper.textButton("Load last session", () -> {
+            tabbedPanel.closeCloseableTabs();
+            sessionSaver.loadTabs();
+            filterContent.rebuild();
+        });
+        controlTable.add(addPacketButton);
+        controlTable.add(loadLastSessionButton);
+        controlTable.add(writeToFileButton);
+        content.add(splitPane)
                .grow();
-
-
-        final VisTextButton packageButton = new VisTextButton("Add package", new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                tabbedPanel.addPacketTab();
-            }
-        });
-        content.add(packageButton);
-
-        final VisTextButton loadPackageButton = new VisTextButton("Load package", new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                tabbedPanel.closeCloseableTabs();
-                sessionSaver.loadTabs();
-                filterContent.rebuild();
-            }
-        });
-        content.add(loadPackageButton);
-
-        final VisTextButton writeToFileButton = new VisTextButton("Export all", new ChangeListener() {
-            @Override
-            public void changed(final ChangeEvent event, final Actor actor) {
-                packageWriter.write();
-            }
-        });
-        content.add(writeToFileButton);
 
     }
 

@@ -1,9 +1,7 @@
 package com.robcio.soundboard2.packer.gui.tab;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -13,8 +11,9 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.robcio.soundboard2.packer.entity.PacketInfo;
 import com.robcio.soundboard2.packer.entity.SoundInfo;
-import com.robcio.soundboard2.packer.gui.component.PacketTabPane;
+import com.robcio.soundboard2.packer.gui.component.PacketAndSoundDetailPane;
 import com.robcio.soundboard2.packer.gui.component.adapter.SoundInfoAdapter;
+import com.robcio.soundboard2.packer.util.ButtonHelper;
 import com.robcio.soundboard2.packer.util.Command;
 
 import javax.inject.Inject;
@@ -24,35 +23,31 @@ import static com.robcio.soundboard2.packer.util.Constants.LIST_VIEW_WIDTH;
 
 public class PacketTab extends Tab {
     private final PacketInfo packetInfo;
-    private final PacketTabPane packetTabPane;
+    private final PacketAndSoundDetailPane packetAndSoundDetailPane;
 
     private final VisTable content = new VisTable();
     private final Command onShowCommand;
 
     @Inject
     public PacketTab(final PacketInfo packetInfo,
-                     final PacketTabPane packetTabPane,
+                     final PacketAndSoundDetailPane packetAndSoundDetailPane,
                      @Named("packetSounds") final FileChooser fileChooser) {
         super(true, true);
         this.packetInfo = packetInfo;
-        this.packetTabPane = packetTabPane;
+        this.packetAndSoundDetailPane = packetAndSoundDetailPane;
 
         final SoundInfoAdapter soundInfoAdapter = new SoundInfoAdapter(packetInfo.getSoundInfoHolder());
         final ListView<SoundInfo> listView = new ListView<>(soundInfoAdapter);
-        initializeLayout(packetTabPane, listView);
+        initializeLayout(packetAndSoundDetailPane, listView);
         updatePacketContent();
-        packetTabPane.openFiles(fileChooser);
+        packetAndSoundDetailPane.openFiles(fileChooser);
         {
             listView.setItemClickListener(
-                    soundInfo -> packetTabPane.updateSoundContent(soundInfo,
-                                                                  soundInfoAdapter::itemsDataChanged));
-            final VisTextButton loadFilesButton = new VisTextButton("Clear & load mp3 folder", new ChangeListener() {
-
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    soundInfoAdapter.deselect();
-                    packetTabPane.openFiles(fileChooser);
-                }
+                    soundInfo -> packetAndSoundDetailPane.updateSoundContent(soundInfo,
+                                                                             soundInfoAdapter::itemsDataChanged));
+            final VisTextButton loadFilesButton = ButtonHelper.textButton("Clear & load sound folder", () -> {
+                soundInfoAdapter.deselect();
+                packetAndSoundDetailPane.openFiles(fileChooser);
             });
             listView.setHeader(loadFilesButton);
             listView.getScrollPane()
@@ -78,7 +73,7 @@ public class PacketTab extends Tab {
     }
 
     private void updatePacketContent() {
-        packetTabPane.updatePacketContent(packetInfo, this::save, this::updateTitle);
+        packetAndSoundDetailPane.updatePacketContent(packetInfo, this::save, this::updateTitle);
     }
 
     private void updateTitle(final String title) {
@@ -86,12 +81,13 @@ public class PacketTab extends Tab {
         getPane().updateTabTitle(this);
     }
 
-    private void initializeLayout(final PacketTabPane packetTabPane, final ListView<SoundInfo> listView) {
+    private void initializeLayout(final PacketAndSoundDetailPane packetAndSoundDetailPane,
+                                  final ListView<SoundInfo> listView) {
         content.left();
         content.add(listView.getMainTable())
                .growY()
                .width(LIST_VIEW_WIDTH);
-        content.add(packetTabPane)
+        content.add(packetAndSoundDetailPane)
                .grow();
     }
 

@@ -1,8 +1,6 @@
 package com.robcio.soundboard2.packer.gui.tab.content.main;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -15,6 +13,7 @@ import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
 import com.robcio.soundboard2.packer.entity.ImageFilterInfo;
 import com.robcio.soundboard2.packer.gui.component.FilterEditor;
 import com.robcio.soundboard2.packer.gui.component.adapter.FilterAdapter;
+import com.robcio.soundboard2.packer.util.ButtonHelper;
 import com.robcio.soundboard2.packer.util.KeyboardFocuser;
 
 import javax.inject.Inject;
@@ -34,6 +33,7 @@ public class FilterContent extends VisTable {
                          final KeyboardFocuser keyboardFocuser,
                          final FilterInfoHolder filterInfoHolder,
                          @Named("image") final Provider<FileChooser> fileChooserProvider) {
+        top();
         this.filterAdapter = filterAdapter;
         final VisTable filterControlTable = new VisTable();
         final ListView<FilterInfo> filterView = new ListView<>(filterAdapter);
@@ -41,34 +41,27 @@ public class FilterContent extends VisTable {
         final FilterEditor filterEditor = new FilterEditor(filterAdapter::itemsDataChanged,
                                                            keyboardFocuser::focus);
         filterAdapter.setItemClickListener(filterEditor::setFilterInfo);
-        final VisTextButton addFilterButton = new VisTextButton("New filter", new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setEditorFilter(filterEditor, new FilterInfo(filterInfoHolder.getFilterInfos()
-                                                                             .size()));
-            }
+        final VisTextButton addFilterButton = ButtonHelper.textButton("New filter", () -> {
+            setEditorFilter(filterEditor, new FilterInfo(filterInfoHolder.getFilterInfos()
+                                                                         .size()));
         });
-        final VisTextButton addImageFilterButton = new VisTextButton("Image filter", new ChangeListener() {
+        final VisTextButton addImageFilterButton = ButtonHelper.textButton("Image filter", () -> {
+            final FileChooser fileChooser = fileChooserProvider.get();
+            fileChooser.setListener(new FileChooserListener() {
+                @Override
+                public void selected(final Array<FileHandle> files) {
+                    final FileHandle fileHandle = files.get(0);
+                    setEditorFilter(filterEditor, new ImageFilterInfo(filterInfoHolder.getFilterInfos()
+                                                                                      .size(), fileHandle));
+                    fillContent(filterView, filterControlTable);
+                }
 
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                final FileChooser fileChooser = fileChooserProvider.get();
-                fileChooser.setListener(new FileChooserListener() {
-                    @Override
-                    public void selected(final Array<FileHandle> files) {
-                        final FileHandle fileHandle = files.get(0);
-                        setEditorFilter(filterEditor, new ImageFilterInfo(filterInfoHolder.getFilterInfos()
-                                                                                          .size(), fileHandle));
-                        fillContent(filterView, filterControlTable);
-                    }
-
-                    @Override
-                    public void canceled() {
-                        fillContent(filterView, filterControlTable);
-                    }
-                });
-                openFileChooser(fileChooser);
-            }
+                @Override
+                public void canceled() {
+                    fillContent(filterView, filterControlTable);
+                }
+            });
+            openFileChooser(fileChooser);
         });
         filterControlTable.add(filterEditor)
                           .growX()
