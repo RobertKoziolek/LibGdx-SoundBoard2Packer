@@ -2,7 +2,7 @@ package com.robcio.soundboard2.packer.file;
 
 public class Constants {
     private static final String BASE = "SoundBoard2Packer";
-    public static final String SESSION_FILE = BASE + "/session.sb2s";
+    public static final String LAST_SESSION_FILE = BASE + "/session.sb2s";
 
     //PACKAGE
     private static final String PACKAGE = BASE + "/package";

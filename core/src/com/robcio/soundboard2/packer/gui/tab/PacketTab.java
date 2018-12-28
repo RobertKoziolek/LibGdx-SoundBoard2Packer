@@ -45,10 +45,12 @@ public class PacketTab extends Tab {
             listView.setItemClickListener(
                     soundInfo -> packetAndSoundDetailPane.updateSoundContent(soundInfo,
                                                                              soundInfoAdapter::itemsDataChanged));
-            final VisTextButton loadFilesButton = ButtonHelper.textButton("Clear & load sound folder", () -> {
-                soundInfoAdapter.deselect();
-                packetAndSoundDetailPane.openFiles(fileChooser);
-            });
+            final VisTextButton loadFilesButton = ButtonHelper.textButton("Clear & loadLastSession sound folder",
+                                                                          () -> {
+                                                                              soundInfoAdapter.deselect();
+                                                                              packetAndSoundDetailPane.openFiles(
+                                                                                      fileChooser);
+                                                                          });
             listView.setHeader(loadFilesButton);
             listView.getScrollPane()
                     .setScrollingDisabled(true, false);
