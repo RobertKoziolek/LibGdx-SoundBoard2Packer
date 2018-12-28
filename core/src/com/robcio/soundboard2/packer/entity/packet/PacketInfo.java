@@ -1,5 +1,7 @@
-package com.robcio.soundboard2.packer.entity;
+package com.robcio.soundboard2.packer.entity.packet;
 
+
+import com.robcio.soundboard2.packer.entity.sound.SoundInfoHolder;
 
 import javax.inject.Inject;
 import java.io.Serializable;

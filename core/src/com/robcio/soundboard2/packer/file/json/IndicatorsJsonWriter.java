@@ -3,8 +3,8 @@ package com.robcio.soundboard2.packer.file.json;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
-import com.robcio.soundboard2.packer.entity.ImageFilterInfo;
+import com.robcio.soundboard2.packer.entity.attribute.FilterInfoHolder;
+import com.robcio.soundboard2.packer.entity.attribute.ImageFilterInfo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,7 +30,7 @@ class IndicatorsJsonWriter extends JsonWriter {
         System.out.println("Saving indicator info");
         final StringWriter stringWriter = new StringWriter();
 
-        final List<ImageFilterInfo> indicators = filterInfoHolder.getFilterInfos()
+        final List<ImageFilterInfo> indicators = filterInfoHolder.getAttributes()
                                                                  .stream()
                                                                  .filter(f -> f instanceof ImageFilterInfo)
                                                                  .map(f -> (ImageFilterInfo) f)

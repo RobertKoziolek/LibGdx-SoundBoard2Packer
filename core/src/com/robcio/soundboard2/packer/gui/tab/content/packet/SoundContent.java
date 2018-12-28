@@ -5,8 +5,9 @@ import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
-import com.robcio.soundboard2.packer.entity.SoundInfo;
+import com.robcio.soundboard2.packer.entity.sound.SoundInfo;
 import com.robcio.soundboard2.packer.gui.tab.content.packet.sound.FilterContent;
+import com.robcio.soundboard2.packer.gui.tab.content.packet.sound.SuiteContent;
 import com.robcio.soundboard2.packer.util.ButtonHelper;
 import com.robcio.soundboard2.packer.util.Command;
 import com.robcio.soundboard2.packer.util.SoundCreator;
@@ -18,12 +19,15 @@ public class SoundContent extends VisTable {
 
     private final SoundCreator soundCreator;
     private final FilterContent filterContent;
+    private final SuiteContent suiteContent;
 
     @Inject
     public SoundContent(final SoundCreator soundCreator,
-                        final FilterContent filterContent) {
+                        final FilterContent filterContent,
+                        final SuiteContent suiteContent) {
         this.soundCreator = soundCreator;
         this.filterContent = filterContent;
+        this.suiteContent = suiteContent;
         left();
     }
 
@@ -42,8 +46,9 @@ public class SoundContent extends VisTable {
             }
         });
 
-        filterContent.update(soundInfo);
-        final VisSplitPane splitPane = new VisSplitPane(filterContent, null, false);
+        filterContent.update(soundInfo.getFiltersId());
+        suiteContent.update(soundInfo.getSuitesId());
+        final VisSplitPane splitPane = new VisSplitPane(filterContent, suiteContent, false);
 
         clear();
         add(playButton).colspan(2)

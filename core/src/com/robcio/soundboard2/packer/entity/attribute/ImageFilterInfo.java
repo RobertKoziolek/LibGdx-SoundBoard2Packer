@@ -1,4 +1,4 @@
-package com.robcio.soundboard2.packer.entity;
+package com.robcio.soundboard2.packer.entity.attribute;
 
 import com.badlogic.gdx.files.FileHandle;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class ImageFilterInfo extends FilterInfo {
+public class ImageFilterInfo extends Attribute {
 
     public enum Align {LEFT, CENTER, RIGHT}
 
@@ -33,7 +33,7 @@ public class ImageFilterInfo extends FilterInfo {
     public ImageFilterInfo(final int id, final FileHandle image) {
         super(id);
         this.id = id;
-        this.name = "New image filter " + id;
+        this.name = "New image attribute " + id;
         this.image = image;
         this.align = Align.CENTER;
     }

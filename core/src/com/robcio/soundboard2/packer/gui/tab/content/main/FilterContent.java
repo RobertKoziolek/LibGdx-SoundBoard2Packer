@@ -8,11 +8,11 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooserListener;
-import com.robcio.soundboard2.packer.entity.FilterInfo;
-import com.robcio.soundboard2.packer.entity.FilterInfoHolder;
-import com.robcio.soundboard2.packer.entity.ImageFilterInfo;
-import com.robcio.soundboard2.packer.gui.component.FilterEditor;
-import com.robcio.soundboard2.packer.gui.component.adapter.FilterAdapter;
+import com.robcio.soundboard2.packer.entity.attribute.Attribute;
+import com.robcio.soundboard2.packer.entity.attribute.FilterInfoHolder;
+import com.robcio.soundboard2.packer.entity.attribute.ImageFilterInfo;
+import com.robcio.soundboard2.packer.gui.component.AttributeEditor;
+import com.robcio.soundboard2.packer.gui.component.adapter.AllFilterAdapter;
 import com.robcio.soundboard2.packer.util.ButtonHelper;
 import com.robcio.soundboard2.packer.util.KeyboardFocuser;
 
@@ -23,36 +23,37 @@ import javax.inject.Singleton;
 
 import static com.robcio.soundboard2.packer.util.Constants.FILTER_VIEW_WIDTH;
 
+//TODO abstract filter/suite content up
 @Singleton
 public class FilterContent extends VisTable {
 
-    private final FilterAdapter filterAdapter;
+    private final AllFilterAdapter allFilterAdapter;
 
     @Inject
-    public FilterContent(final FilterAdapter filterAdapter,
+    public FilterContent(final AllFilterAdapter allFilterAdapter,
                          final KeyboardFocuser keyboardFocuser,
                          final FilterInfoHolder filterInfoHolder,
                          @Named("image") final Provider<FileChooser> fileChooserProvider) {
         top();
-        this.filterAdapter = filterAdapter;
+        this.allFilterAdapter = allFilterAdapter;
         final VisTable filterControlTable = new VisTable();
-        final ListView<FilterInfo> filterView = new ListView<>(filterAdapter);
+        final ListView<Attribute> filterView = new ListView<>(allFilterAdapter);
         filterView.setHeader(new VisLabel("Filters:"));
-        final FilterEditor filterEditor = new FilterEditor(filterAdapter::itemsDataChanged,
-                                                           keyboardFocuser::focus);
-        filterAdapter.setItemClickListener(filterEditor::setFilterInfo);
-        final VisTextButton addFilterButton = ButtonHelper.textButton("New filter", () -> {
-            setEditorFilter(filterEditor, new FilterInfo(filterInfoHolder.getFilterInfos()
-                                                                         .size()));
+        final AttributeEditor attributeEditor = new AttributeEditor(allFilterAdapter::itemsDataChanged,
+                                                                    keyboardFocuser::focus);
+        allFilterAdapter.setItemClickListener(attributeEditor::setAttribute);
+        final VisTextButton addFilterButton = ButtonHelper.textButton("New attribute", () -> {
+            setEditorFilter(attributeEditor, new Attribute(filterInfoHolder.getAttributes()
+                                                                           .size()));
         });
-        final VisTextButton addImageFilterButton = ButtonHelper.textButton("Image filter", () -> {
+        final VisTextButton addImageFilterButton = ButtonHelper.textButton("Image attribute", () -> {
             final FileChooser fileChooser = fileChooserProvider.get();
             fileChooser.setListener(new FileChooserListener() {
                 @Override
                 public void selected(final Array<FileHandle> files) {
                     final FileHandle fileHandle = files.get(0);
-                    setEditorFilter(filterEditor, new ImageFilterInfo(filterInfoHolder.getFilterInfos()
-                                                                                      .size(), fileHandle));
+                    setEditorFilter(attributeEditor, new ImageFilterInfo(filterInfoHolder.getAttributes()
+                                                                                         .size(), fileHandle));
                     fillContent(filterView, filterControlTable);
                 }
 
@@ -63,7 +64,7 @@ public class FilterContent extends VisTable {
             });
             openFileChooser(fileChooser);
         });
-        filterControlTable.add(filterEditor)
+        filterControlTable.add(attributeEditor)
                           .growX()
                           .row();
         filterControlTable.add(addFilterButton)
@@ -75,7 +76,6 @@ public class FilterContent extends VisTable {
         fillContent(filterView, filterControlTable);
     }
 
-    //TODO separate filter editor, image viewing, choosing and list depending on space in main tab
     private void openFileChooser(final FileChooser fileChooser) {
         clear();
         add(fileChooser);
@@ -88,12 +88,12 @@ public class FilterContent extends VisTable {
         add(filterControlTable).growX();
     }
 
-    private void setEditorFilter(final FilterEditor filterEditor, final FilterInfo filterInfo) {
-        filterAdapter.add(filterInfo);
-        filterEditor.setFilterInfo(filterInfo);
+    private void setEditorFilter(final AttributeEditor attributeEditor, final Attribute attribute) {
+        allFilterAdapter.add(attribute);
+        attributeEditor.setAttribute(attribute);
     }
 
     public void rebuild() {
-        filterAdapter.itemsChanged();
+        allFilterAdapter.itemsChanged();
     }
 }

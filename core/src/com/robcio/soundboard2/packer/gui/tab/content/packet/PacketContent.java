@@ -3,7 +3,7 @@ package com.robcio.soundboard2.packer.gui.tab.content.packet;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
-import com.robcio.soundboard2.packer.entity.PacketInfo;
+import com.robcio.soundboard2.packer.entity.packet.PacketInfo;
 import com.robcio.soundboard2.packer.util.ButtonHelper;
 import com.robcio.soundboard2.packer.util.Command;
 import com.robcio.soundboard2.packer.util.validator.NameValidator;

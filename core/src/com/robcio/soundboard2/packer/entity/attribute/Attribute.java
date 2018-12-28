@@ -1,8 +1,8 @@
-package com.robcio.soundboard2.packer.entity;
+package com.robcio.soundboard2.packer.entity.attribute;
 
 import java.io.Serializable;
 
-public class FilterInfo implements Serializable {
+public class Attribute implements Serializable {
     protected Integer id;
     protected String name;
 
@@ -18,9 +18,9 @@ public class FilterInfo implements Serializable {
         return id;
     }
 
-    public FilterInfo(final int id) {
+    public Attribute(final int id) {
         super();
         this.id = id;
-        this.name = "New filter " + id;
+        this.name = "New attribute " + id;
     }
 }

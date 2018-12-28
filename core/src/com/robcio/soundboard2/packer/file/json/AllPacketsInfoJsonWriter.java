@@ -3,8 +3,8 @@ package com.robcio.soundboard2.packer.file.json;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.robcio.soundboard2.packer.entity.PacketInfo;
-import com.robcio.soundboard2.packer.entity.PacketInfoHolder;
+import com.robcio.soundboard2.packer.entity.packet.PacketInfo;
+import com.robcio.soundboard2.packer.entity.packet.PacketInfoHolder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

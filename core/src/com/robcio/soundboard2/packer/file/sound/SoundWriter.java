@@ -2,8 +2,8 @@ package com.robcio.soundboard2.packer.file.sound;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.robcio.soundboard2.packer.entity.PacketInfoHolder;
-import com.robcio.soundboard2.packer.entity.SoundInfo;
+import com.robcio.soundboard2.packer.entity.packet.PacketInfoHolder;
+import com.robcio.soundboard2.packer.entity.sound.SoundInfo;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

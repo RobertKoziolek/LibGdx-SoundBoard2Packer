@@ -7,31 +7,32 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.robcio.soundboard2.packer.entity.FilterInfo;
-import com.robcio.soundboard2.packer.entity.ImageFilterInfo;
+import com.robcio.soundboard2.packer.entity.attribute.Attribute;
+import com.robcio.soundboard2.packer.entity.attribute.ImageFilterInfo;
 import com.robcio.soundboard2.packer.util.Command;
 
 import java.util.function.Consumer;
 
-public class FilterEditor extends VisTable {
+public class AttributeEditor extends VisTable {
 
     private final FilterNamingField filterNamingField;
     private final VisLabel alignLabel;
     private final Image image;
 
-    public FilterEditor(final Command itemsDataChangedCommand, final Consumer<Focusable> keyboardFocusConsumer) {
+    public AttributeEditor(final Command itemsDataChangedCommand, final Consumer<Focusable> keyboardFocusConsumer) {
         this.filterNamingField = new FilterNamingField(itemsDataChangedCommand, keyboardFocusConsumer);
         this.alignLabel = new VisLabel();
         this.image = new Image();
     }
 
-    public void setFilterInfo(final FilterInfo filterInfo) {
+    //TODO separate this better
+    public void setAttribute(final Attribute attribute) {
         clear();
-        filterNamingField.setFilterInfo(filterInfo);
+        filterNamingField.setAttribute(attribute);
         add(filterNamingField).growX()
                               .row();
-        if (filterInfo instanceof ImageFilterInfo) {
-            final ImageFilterInfo imageFilterInfo = (ImageFilterInfo) filterInfo;
+        if (attribute instanceof ImageFilterInfo) {
+            final ImageFilterInfo imageFilterInfo = (ImageFilterInfo) attribute;
             //TODO fix image size
             final Texture texture = new Texture(imageFilterInfo.getImage()
                                                                .path());

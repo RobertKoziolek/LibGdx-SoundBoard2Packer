@@ -7,8 +7,8 @@ import com.kotcrab.vis.ui.util.adapter.ArrayListAdapter;
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.robcio.soundboard2.packer.entity.SoundInfo;
-import com.robcio.soundboard2.packer.entity.SoundInfoHolder;
+import com.robcio.soundboard2.packer.entity.sound.SoundInfo;
+import com.robcio.soundboard2.packer.entity.sound.SoundInfoHolder;
 
 import java.util.Arrays;
 

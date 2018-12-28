@@ -1,4 +1,4 @@
-package com.robcio.soundboard2.packer.entity;
+package com.robcio.soundboard2.packer.entity.packet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

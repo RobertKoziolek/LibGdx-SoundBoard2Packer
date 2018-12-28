@@ -3,7 +3,12 @@ package com.robcio.soundboard2.packer.file.json;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.robcio.soundboard2.packer.entity.*;
+import com.robcio.soundboard2.packer.entity.attribute.Attribute;
+import com.robcio.soundboard2.packer.entity.attribute.FilterInfoHolder;
+import com.robcio.soundboard2.packer.entity.attribute.SuiteInfoHolder;
+import com.robcio.soundboard2.packer.entity.packet.PacketInfo;
+import com.robcio.soundboard2.packer.entity.packet.PacketInfoHolder;
+import com.robcio.soundboard2.packer.entity.sound.SoundInfoHolder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -19,11 +24,15 @@ public class PacketJsonWriter extends JsonWriter {
 
     private final PacketInfoHolder packetInfoHolder;
     private final FilterInfoHolder filterInfoHolder;
+    private final SuiteInfoHolder suiteInfoHolder;
 
     @Inject
-    public PacketJsonWriter(final PacketInfoHolder packetInfoHolder, final FilterInfoHolder filterInfoHolder) {
+    public PacketJsonWriter(final PacketInfoHolder packetInfoHolder,
+                            final FilterInfoHolder filterInfoHolder,
+                            final SuiteInfoHolder suiteInfoHolder) {
         this.packetInfoHolder = packetInfoHolder;
         this.filterInfoHolder = filterInfoHolder;
+        this.suiteInfoHolder = suiteInfoHolder;
     }
 
     @Override
@@ -51,12 +60,13 @@ public class PacketJsonWriter extends JsonWriter {
                            json.writeValue("file", soundInfo.getFileHandle()
                                                             .name()
                                                             .replace(".mp3", ""));
-                           final List<String> filters = filterInfoHolder.getFilterInfos(soundInfo.getFiltersId())
-                                                                        .stream()
-                                                                        .map(FilterInfo::getName)
-                                                                        .collect(Collectors.toList());
+                           final List<String> filters = getAttributes(
+                                   filterInfoHolder.getAttributes(soundInfo.getFiltersId()));
+                           final List<String> suites = getAttributes(
+                                   suiteInfoHolder.getAttributes(soundInfo.getSuitesId()));
+
                            writeArray(json, "filter", packetInfo.getName(), filters);
-                           writeArray(json, "suite", null, soundInfo.getSuites());
+                           writeArray(json, "suite", null, suites);
                            json.writeObjectEnd();
                        });
         json.writeArrayEnd();
@@ -65,5 +75,11 @@ public class PacketJsonWriter extends JsonWriter {
         final FileHandle fileHandle = Gdx.files.external(PACKAGE_JSON + "/" + packetInfo.getFolder() + ".json");
         json.setOutputType(javascript);
         fileHandle.writeString(json.prettyPrint(stringWriter.toString()), false);
+    }
+
+    private List<String> getAttributes(final List<Attribute> attributes) {
+        return attributes.stream()
+                         .map(Attribute::getName)
+                         .collect(Collectors.toList());
     }
 }
